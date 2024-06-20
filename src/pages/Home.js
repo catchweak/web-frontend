@@ -11,57 +11,70 @@ import axios from 'axios';
 const Home = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [news, setNews] = useState([]);
     const [headlines, setHeadlines] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 카테고리 가져오기
         axios.get('/api/categories')
             .then(response => setCategories(response.data))
             .catch(error => console.log("Error fetching categories: " + error));
 
-        // 전체 뉴스 기사 가져오기
-        axios.get('/api/articles')
-            .then(response => setNews(response.data))
-            .catch(error => console.log("Error fetching articles: " + error));
-
-        // 헤드라인 뉴스 가져오기
         axios.get('/api/articles/headlines')
-            .then(response => setHeadlines(response.data))
-            .catch(error => console.log("Error fetching headlines: " + error));
+            .then(response => {
+                setHeadlines(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.log("Error fetching headlines: " + error);
+                setLoading(false);
+            });
     }, []);
 
-    const filteredNews = selectedCategory ? news.filter(article => article.category.code === selectedCategory.code) : [];
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+    };
 
     return (
         <div>
-            <Header categories={categories} onCategorySelect={setSelectedCategory} />
+            <Header categories={categories} onCategorySelect={handleCategorySelect} />
+            <div className="header-spacing"></div> {/* 헤더 아래 공간 확보 */}
             <div className="main-content">
                 <div className="content-container">
-                    <div className="headline-banner">
-                        {headlines.map((item, index) => (
-                            <div key={index} className="headline-item">
-                                <img src={item.imgUrl} alt={item.headline} />
-                                <div className="headline-text">
-                                    <h2>{item.headline}</h2>
-                                    <p>{item.summary}</p>
+                    {loading ? (
+                        <div className="headline-banner">
+                            {[...Array(3)].map((_, index) => (
+                                <div key={index} className="headline-item skeleton">
+                                    <div className="skeleton-headline"></div>
+                                    <div className="skeleton-text"></div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="headline-banner">
+                            {headlines.map((item, index) => (
+                                <div key={index} className="headline-item">
+                                    <img src={item.imgUrl} alt={item.headline} />
+                                    <div className="headline-text">
+                                        <h2>{item.headline}</h2>
+                                        <p>{item.summary}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="section">
                         <HotTopics />
                     </div>
                     <div className="section">
                         {selectedCategory && (
-                            <NewsSection title={selectedCategory.name} news={filteredNews} />
+                            <NewsSection key={selectedCategory.code} title={selectedCategory.name} selectedCategory={selectedCategory} />
                         )}
                     </div>
                     <div className="section">
-                        <RecommendedNews news={filteredNews} />
+                        <RecommendedNews news={[]} />
                     </div>
                     <div className="section">
-                        <PopularNews news={filteredNews} />
+                        <PopularNews news={[]} />
                     </div>
                     <div className="section">
                         <Events />
