@@ -1,91 +1,32 @@
-// import React, { useState } from 'react';
-// //import logo from '/img/logo.png'; // 로고 이미지 불러오기
-//
-// const Header = ({ categories, onCategorySelect }) => {
-//     const [selectedTopCategory, setSelectedTopCategory] = useState(null);
-//
-//     const handleTopCategoryClick = (category) => {
-//         if (selectedTopCategory && selectedTopCategory.code === category.code) {
-//             setSelectedTopCategory(null); // 같은 카테고리를 클릭하면 닫기
-//         } else {
-//             setSelectedTopCategory(category);
-//         }
-//     };
-//
-//     const topCategories = categories.filter(category => !category.parentCode);
-//     const subCategories = selectedTopCategory
-//         ? categories.filter(category => category.parentCode === selectedTopCategory.code)
-//         : [];
-//
-//     return (
-//         <header>
-//             <div className="logo-container">
-//                 <img src='/img/logo.png' alt="Logo" className="logo-image" /> {/* 로고 이미지 적용 */}
-//                 <div className="logo-text">CatchWeak</div>
-//             </div>
-//             <nav className="nav-menu">
-//                 <ul className="top-category-list">
-//                     {topCategories.map(category => (
-//                         <li key={category.code} className="top-category-item">
-//                             <button onClick={() => handleTopCategoryClick(category)}>
-//                                 {category.name}
-//                             </button>
-//                         </li>
-//                     ))}
-//                 </ul>
-//                 {selectedTopCategory && (
-//                     <ul className="sub-category-list">
-//                         {subCategories.map(category => (
-//                             <li key={category.code} className="sub-category-item">
-//                                 <button onClick={() => onCategorySelect(category)}>
-//                                     {category.name}
-//                                 </button>
-//                             </li>
-//                         ))}
-//                     </ul>
-//                 )}
-//             </nav>
-//             <div className="header-right">
-//                 <div className="search-bar">
-//                     <input type="text" placeholder="Search..." />
-//                 </div>
-//                 <div className="user-menu">
-//                     <a href="/login">Login</a>
-//                 </div>
-//             </div>
-//         </header>
-//     );
-// };
-//
-// export default Header;
+import React, { useState, useEffect } from 'react';
 
-import React, { useState } from 'react';
-
-const Header = ({ categories = [], onCategorySelect }) => {
+const Header = ({ categories = [], onTopCategorySelect }) => {
     const [selectedTopCategory, setSelectedTopCategory] = useState(null);
 
-    const handleTopCategoryClick = (category) => {
-        if (selectedTopCategory && selectedTopCategory.code === category.code) {
-            setSelectedTopCategory(null); // 같은 카테고리를 클릭하면 닫기
-        } else {
-            setSelectedTopCategory(category);
+    useEffect(() => {
+        if (categories.length > 0) {
+            const topCategories = categories.filter(category => !category.parentCode);
+            if (topCategories.length > 0) {
+                setSelectedTopCategory(topCategories[0]);
+                onTopCategorySelect(topCategories[0]);
+            }
         }
-    };
+    }, [categories]);
 
-    const topCategories = categories.filter(category => !category.parentCode);
-    const subCategories = selectedTopCategory
-        ? categories.filter(category => category.parentCode === selectedTopCategory.code)
-        : [];
+    const handleTopCategoryClick = (category) => {
+        setSelectedTopCategory(category);
+        onTopCategorySelect(category);
+    };
 
     return (
         <header>
             <div className="logo-container">
-                <img src='/img/logo.png' alt="Logo" className="logo-image" /> {/* 로고 이미지 적용 */}
+                <img src='/img/logo.png' alt="Logo" className="logo-image" />
                 <div className="logo-text">CatchWeak</div>
             </div>
             <nav className="nav-menu">
                 <ul className="top-category-list">
-                    {topCategories.map(category => (
+                    {categories.filter(category => !category.parentCode).map(category => (
                         <li key={category.code} className="top-category-item">
                             <button onClick={() => handleTopCategoryClick(category)}>
                                 {category.name}
@@ -93,17 +34,6 @@ const Header = ({ categories = [], onCategorySelect }) => {
                         </li>
                     ))}
                 </ul>
-                {selectedTopCategory && (
-                    <ul className="sub-category-list">
-                        {subCategories.map(category => (
-                            <li key={category.code} className="sub-category-item">
-                                <button onClick={() => onCategorySelect(category)}>
-                                    {category.name}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                )}
             </nav>
             <div className="header-right">
                 <div className="search-bar">

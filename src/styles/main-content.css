@@ -1,7 +1,7 @@
 /* styles/main-content.css */
 /***  메인 컨텐츠  ***/
 .main-content {
-    padding-top: 60px;
+    padding-top: 20px;
     display: flex;
     justify-content: center;
     margin-top: 20px;

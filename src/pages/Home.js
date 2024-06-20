@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
+import SubCategoryNav from '../components/SubCategoryNav';
 import HotTopics from '../components/HotTopics';
 import NewsSection from '../components/NewsSection';
 import RecommendedNews from '../components/RecommendedNews';
@@ -11,12 +12,15 @@ import axios from 'axios';
 const Home = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [subCategories, setSubCategories] = useState([]);
     const [headlines, setHeadlines] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get('/api/categories')
-            .then(response => setCategories(response.data))
+            .then(response => {
+                setCategories(response.data);
+            })
             .catch(error => console.log("Error fetching categories: " + error));
 
         axios.get('/api/articles/headlines')
@@ -30,14 +34,35 @@ const Home = () => {
             });
     }, []);
 
-    const handleCategorySelect = (category) => {
-        setSelectedCategory(category);
+    useEffect(() => {
+        if (categories.length > 0) {
+            const topCategories = categories.filter(category => !category.parentCode);
+            if (topCategories.length > 0) {
+                const initialTopCategory = topCategories[0];
+                handleTopCategorySelect(initialTopCategory);
+            }
+        }
+    }, [categories]);
+
+    const handleTopCategorySelect = (topCategory) => {
+        const filteredSubCategories = categories.filter(
+            category => category.parentCode === topCategory.code
+        );
+        setSubCategories(filteredSubCategories);
+        if (filteredSubCategories.length > 0) {
+            setSelectedCategory(filteredSubCategories[0]);
+        }
+    };
+
+    const handleSubCategorySelect = (subCategory) => {
+        setSelectedCategory(subCategory);
     };
 
     return (
         <div>
-            <Header categories={categories} onCategorySelect={handleCategorySelect} />
+            <Header categories={categories} onTopCategorySelect={handleTopCategorySelect} />
             <div className="header-spacing"></div> {/* 헤더 아래 공간 확보 */}
+            <SubCategoryNav subCategories={subCategories} onCategorySelect={handleSubCategorySelect} />
             <div className="main-content">
                 <div className="content-container">
                     {loading ? (
