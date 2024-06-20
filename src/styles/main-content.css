@@ -1,0 +1,54 @@
+/* styles/main-content.css */
+/***  메인 컨텐츠  ***/
+.main-content {
+    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.content-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.news-item {
+    cursor: pointer;
+}
+
+.news-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.news-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+}
+
+.news-item h3 {
+    margin: 15px 0;
+    font-size: 1.2em;
+    color: #2c3e50;
+}

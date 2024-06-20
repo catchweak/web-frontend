@@ -1,0 +1,64 @@
+/* styles/navigation.css */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    width: auto;
+}
+
+/* 상위 카테고리 */
+.top-category-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    background-color: #2c3e50;
+}
+
+.top-category-item button {
+    padding: 10px 20px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.top-category-item button:hover {
+    color: #ff6347;
+}
+
+/* 하위 카테고리 */
+.sub-category-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px 0;
+    position: fixed;
+    top: 82px;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sub-category-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.sub-category-item button {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #333333;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.sub-category-item button:hover {
+    color: #0078d7;
+}
