@@ -24,6 +24,7 @@ header {
 }
 
 .logo-text {
+    padding-left: 10px;
     font-weight: bold;
     font-size: 1.2em;
 }
