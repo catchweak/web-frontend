@@ -10,23 +10,23 @@ const NewsSection = ({ title, selectedCategory }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setNews([]);
-        setPage(0);
-        setHasMore(true);
         if (selectedCategory) {
-            fetchArticles(0); // Reset and fetch first page when category changes
+            setNews([]);
+            setPage(0);
+            setHasMore(true);
+            fetchArticles(0, selectedCategory);
         }
     }, [selectedCategory]);
 
     useEffect(() => {
         if (page > 0) {
-            fetchArticles(page);
+            fetchArticles(page, selectedCategory);
         }
     }, [page]);
 
-    const fetchArticles = (pageToFetch) => {
+    const fetchArticles = (pageToFetch, category) => {
         setLoading(true);
-        let url = `/api/articles/category?categoryCode=${selectedCategory.code}&page=${pageToFetch}&size=10`;
+        let url = `/api/articles/category?categoryCode=${category.code}&page=${pageToFetch}&size=10`;
 
         axios.get(url)
             .then(response => {
