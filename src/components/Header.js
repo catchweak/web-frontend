@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ topCategories = [], onTopCategorySelect }) => {
     const [topCategory, setTopCategory] = useState(null);
     const [subCategories, setSubCategories] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (topCategories.length > 0) {
@@ -25,18 +27,24 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
             ...topCategories.filter(cat => cat.parentCode === category.code)
         ]);
         onTopCategorySelect(category);
+        navigate(`/category/${category.code}`);
     };
 
     const handleSubCategoryClick = (category) => {
         onTopCategorySelect(category.code === 'all' ? topCategory : category);
+        navigate(`/category/${category.code}`);
+    }
+
+    const handleLogoClick = () => {
+        navigate('/');
     };
 
     return (
         <>
             <header className="navbar navbar-expand-lg navbar-dark main-bg">
                 <div className="container-fluid">
-                    <div className="navbar-brand logo-container">
-                        <img src='/img/logo.png' alt="Logo" className="logo-image"/>
+                    <div className="navbar-brand logo-container" onClick={handleLogoClick}>
+                        <img src='/img/logo.png' alt="Logo" className="logo-image" />
                         <div className="logo-text">CatchWeak</div>
                     </div>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
