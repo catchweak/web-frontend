@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import SubCategoryNav from '../components/SubCategoryNav';
 import HotTopics from '../components/HotTopics';
 import NewsSection from '../components/NewsSection';
 import RecommendedNews from '../components/RecommendedNews';
@@ -11,18 +10,19 @@ import axios from 'axios';
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [subCategories, setSubCategories] = useState([]);
+    const [currentCategory, setCurrentCategory] = useState(null);
     const [headlines, setHeadlines] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // 카테고리 가져오기
         axios.get('/api/categories')
             .then(response => {
                 setCategories(response.data);
             })
-            .catch(error => console.log("Error fetching categories: " + error));
+            .catch(error => console.log("Error fetching top categories: " + error));
 
+        // 헤드라인 뉴스 가져오기
         axios.get('/api/articles/headlines')
             .then(response => {
                 setHeadlines(response.data);
@@ -34,35 +34,13 @@ const Home = () => {
             });
     }, []);
 
-    useEffect(() => {
-        if (categories.length > 0) {
-            const topCategories = categories.filter(category => !category.parentCode);
-            if (topCategories.length > 0) {
-                const initialTopCategory = topCategories[0];
-                handleTopCategorySelect(initialTopCategory);
-            }
-        }
-    }, [categories]);
-
-    const handleTopCategorySelect = (topCategory) => {
-        const filteredSubCategories = categories.filter(
-            category => category.parentCode === topCategory.code
-        );
-        setSubCategories(filteredSubCategories);
-        if (filteredSubCategories.length > 0) {
-            setSelectedCategory(filteredSubCategories[0]);
-        }
-    };
-
-    const handleSubCategorySelect = (subCategory) => {
-        setSelectedCategory(subCategory);
+    const handleCategorySelect = (category) => {
+        setCurrentCategory(category);
     };
 
     return (
         <div>
-            <Header categories={categories} onTopCategorySelect={handleTopCategorySelect} />
-            <div className="header-spacing"></div> {/* 헤더 아래 공간 확보 */}
-            <SubCategoryNav subCategories={subCategories} onCategorySelect={handleSubCategorySelect} />
+            <Header topCategories={categories} onTopCategorySelect={handleCategorySelect} />
             <div className="main-content">
                 <div className="content-container">
                     {loading ? (
@@ -91,8 +69,8 @@ const Home = () => {
                         <HotTopics />
                     </div>
                     <div className="section">
-                        {selectedCategory && (
-                            <NewsSection key={selectedCategory.code} title={selectedCategory.name} selectedCategory={selectedCategory} />
+                        {currentCategory && (
+                            <NewsSection key={currentCategory.code} title={currentCategory.name} selectedCategory={currentCategory} />
                         )}
                     </div>
                     <div className="section">
