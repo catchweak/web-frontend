@@ -1,46 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const Home = () => {
-    const [categories, setCategories] = useState([]);
-    const [currentCategory, setCurrentCategory] = useState(null);
-    const navigate = useNavigate();
-    const location = useLocation();
+const NewsDetail = () => {
+    const { id } = useParams();
+    const [article, setArticle] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('/api/categories')
+        axios.get(`/api/articles/${id}`)
             .then(response => {
-                setCategories(response.data);
+                setArticle(response.data);
+                setLoading(false);
             })
-            .catch(error => console.log("Error fetching categories: " + error));
-    }, []);
+            .catch(error => {
+                console.log("Error fetching article: " + error);
+                setLoading(false);
+            });
+    }, [id]);
 
-    useEffect(() => {
-        if (location.pathname.startsWith("/category/")) {
-            const categoryCode = location.pathname.split("/category/")[1];
-            const selectedCategory = categories.find(category => category.code === categoryCode);
-            if (selectedCategory) {
-                setCurrentCategory(selectedCategory);
-            }
-        }
-    }, [location, categories]);
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-    const handleCategorySelect = (category) => {
-        setCurrentCategory(category);
-    };
+    if (!article) {
+        return <div>Article not found</div>;
+    }
 
     return (
-        <div>
-            <Header topCategories={categories} onTopCategorySelect={handleCategorySelect} />
-            <div className="main-content">
-                <Outlet context={{ currentCategory }} />
+        <div className="news-detail">
+            <h1>{article.headline}</h1>
+            <div className="news-meta">
+                <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
             </div>
-            <Footer />
+            <blockquote className="news-summary">{article.summary}</blockquote>
+            <img src={article.imgUrl} alt={article.headline} className="news-image"/>
+            <div className="news-body">
+                {article.body.split('\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                ))}
+            </div>
+            <div className="news-category">
+                <p>기사원문: <a href={article.originUrl} target="_blank"
+                            rel="noopener noreferrer">{article.originUrl}</a></p>
+            </div>
         </div>
     );
 };
 
-export default Home;
+export default NewsDetail;

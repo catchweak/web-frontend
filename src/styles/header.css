@@ -1,22 +1,17 @@
-/***  헤더 네비게이션  ***/
+/*** 헤더 네비게이션 ***/
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 10px 20px;
-    background-color: #2c3e50;
-    color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
 }
 
-/* 메인 로고 */
+.main-bg{
+    background: #2c3e50;
+}
+
 .logo-container {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .logo-image {
@@ -35,7 +30,6 @@ header {
     gap: 20px;
 }
 
-/* 검색 박스 */
 .search-bar input {
     padding: 8px 15px;
     border-radius: 20px;
@@ -48,7 +42,6 @@ header {
     border-color: #ff6347;
 }
 
-/* 유저 메뉴(로그인 등) */
 .user-menu a {
     color: white;
     text-decoration: none;
@@ -59,7 +52,82 @@ header {
     color: #ff6347;
 }
 
-/* 헤더 아래 공간 확보 */
-.header-spacing {
-    height: 120px; /* 헤더와 서브 카테고리 네비게이션 높이만큼 여백 추가 */
+/*** 서브 카테고리 네비게이션 ***/
+
+.nav-item button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav-item button:hover {
+    color: #0056b3;
+}
+
+/* styles/navigation.css */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    width: auto;
+}
+
+/* 상위 카테고리 */
+.top-category-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    background-color: #2c3e50;
+}
+
+.top-category-item button {
+    padding: 10px 20px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    /*font-weight: bold;*/
+    transition: color 0.3s;
+}
+
+.top-category-item button:hover {
+    color: #ff6347;
+}
+
+/* 하위 카테고리 */
+.sub-category-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px 0;
+    position: fixed;
+    top: 82px;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sub-category-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.sub-category-item button {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    /*font-weight: bold;*/
+    transition: color 0.3s;
+}
+
+.sub-category-item button:hover {
+    background: #2c3e50;
+    color: #ffffff;
 }
