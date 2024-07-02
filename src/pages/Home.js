@@ -1,92 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import HotTopics from '../components/HotTopics';
-import NewsSection from '../components/NewsSection';
-import RecommendedNews from '../components/RecommendedNews';
-import PopularNews from '../components/PopularNews';
-import Events from '../components/Events';
-import Footer from '../components/Footer';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const Home = () => {
-    const [categories, setCategories] = useState([]);
-    const [currentCategory, setCurrentCategory] = useState(null);
-    const [headlines, setHeadlines] = useState([]);
+const NewsDetail = () => {
+    const { id } = useParams();
+    const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 카테고리 가져오기
-        axios.get('/api/categories')
+        axios.get(`/api/articles/${id}`)
             .then(response => {
-                setCategories(response.data);
-            })
-            .catch(error => console.log("Error fetching top categories: " + error));
-
-        // 헤드라인 뉴스 가져오기
-        axios.get('/api/articles/headlines')
-            .then(response => {
-                setHeadlines(response.data);
+                setArticle(response.data);
                 setLoading(false);
             })
             .catch(error => {
-                console.log("Error fetching headlines: " + error);
+                console.log("Error fetching article: " + error);
                 setLoading(false);
             });
-    }, []);
+    }, [id]);
 
-    const handleCategorySelect = (category) => {
-        setCurrentCategory(category);
-    };
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!article) {
+        return <div>Article not found</div>;
+    }
 
     return (
-        <div>
-            <Header topCategories={categories} onTopCategorySelect={handleCategorySelect} />
-            <div className="main-content">
-                <div className="content-container">
-                    {loading ? (
-                        <div className="headline-banner">
-                            {[...Array(3)].map((_, index) => (
-                                <div key={index} className="headline-item skeleton">
-                                    <div className="skeleton-headline"></div>
-                                    <div className="skeleton-text"></div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="headline-banner">
-                            {headlines.map((item, index) => (
-                                <div key={index} className="headline-item">
-                                    <img src={item.imgUrl} alt={item.headline} />
-                                    <div className="headline-text">
-                                        <h2>{item.headline}</h2>
-                                        <p>{item.summary}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    <div className="section">
-                        <HotTopics />
-                    </div>
-                    <div className="section">
-                        {currentCategory && (
-                            <NewsSection key={currentCategory.code} title={currentCategory.name} selectedCategory={currentCategory} />
-                        )}
-                    </div>
-                    <div className="section">
-                        <RecommendedNews news={[]} />
-                    </div>
-                    <div className="section">
-                        <PopularNews news={[]} />
-                    </div>
-                    <div className="section">
-                        <Events />
-                    </div>
-                </div>
+        <div className="news-detail">
+            <h1>{article.headline}</h1>
+            <div className="news-meta">
+                <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
             </div>
-            <Footer />
+            <blockquote className="news-summary">{article.summary}</blockquote>
+            <img src={article.imgUrl} alt={article.headline} className="news-image"/>
+            <div className="news-body">
+                {article.body.split('\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                ))}
+            </div>
+            <div className="news-category">
+                <p>기사원문: <a href={article.originUrl} target="_blank"
+                            rel="noopener noreferrer">{article.originUrl}</a></p>
+            </div>
         </div>
     );
 };
 
-export default Home;
+export default NewsDetail;
