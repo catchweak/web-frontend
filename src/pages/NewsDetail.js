@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from "../util/axiosInstance";
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -8,7 +8,7 @@ const NewsDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`/api/articles/${id}`)
+        axiosInstance.get(`/api/articles/${id}`)
             .then(response => {
                 setArticle(response.data);
                 setLoading(false);
