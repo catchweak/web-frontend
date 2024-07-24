@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import axios from 'axios';
+import axiosInstance from "../util/axiosInstance";
 
 const Home = () => {
     const [categories, setCategories] = useState([]);
@@ -10,7 +10,7 @@ const Home = () => {
     const location = useLocation();
 
     useEffect(() => {
-        axios.get('/api/categories')
+        axiosInstance.get('/api/categories')
             .then(response => {
                 setCategories(response.data);
             })
