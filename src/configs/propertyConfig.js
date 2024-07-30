@@ -1,4 +1,4 @@
-const propertyJson = require("./property.json");
+import propertyJson from "./property.json"
 
 const catchweekServerHost =
   process.env.catchweekServerHost || propertyJson["catchweekServerHost"];
