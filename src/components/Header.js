@@ -12,7 +12,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
             if (initialTopCategory) {
                 setTopCategory(initialTopCategory);
                 setSubCategories([
-                    { code: 'all', name: '전체', parentCode: initialTopCategory.code },
+                    { code: initialTopCategory.code, name: '전체', parentCode: initialTopCategory.code },
                     ...topCategories.filter(category => category.parentCode === initialTopCategory.code)
                 ]);
                 onTopCategorySelect(initialTopCategory);
@@ -23,7 +23,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
     const handleTopCategoryClick = (category) => {
         setTopCategory(category);
         setSubCategories([
-            { code: 'all', name: '전체', parentCode: category.code },
+            { code: category.code, name: '전체', parentCode: category.code },
             ...topCategories.filter(cat => cat.parentCode === category.code)
         ]);
         onTopCategorySelect(category);
@@ -31,7 +31,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
     };
 
     const handleSubCategoryClick = (category) => {
-        onTopCategorySelect(category.code === 'all' ? topCategory : category);
+        //onTopCategorySelect(category.code === 'all' ? topCategory : category);
         navigate(`/category/${category.code}`);
     }
 
