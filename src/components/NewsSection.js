@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from "../utils/axiosHelper";
 
 const NewsSection = ({ title, selectedCategory }) => {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ const NewsSection = ({ title, selectedCategory }) => {
         setLoading(true);
         let url = `/api/articles/category?categoryCode=${category.code}&page=${pageToFetch}&size=10`;
 
-        axios.get(url)
+        axiosClient.get(url)
             .then(response => {
                 if (pageToFetch === 0) {
                     setNews(response.data.content);

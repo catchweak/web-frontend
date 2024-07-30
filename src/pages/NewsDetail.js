@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axiosInstance from "../util/axiosInstance";
+import axiosClient from "../utils/axiosHelper";
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -58,7 +58,7 @@ const NewsDetail = () => {
     }
 
     useEffect(() => {
-        axiosInstance.get(`/api/articles/${id}`)
+        axiosClient.get(`/api/articles/${id}`)
             .then(response => {
                 setArticle(response.data);
                 setLoading(false);

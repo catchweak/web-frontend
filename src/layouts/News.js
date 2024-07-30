@@ -5,7 +5,7 @@ import NewsSection from '../components/NewsSection';
 import RecommendedNews from '../components/RecommendedNews';
 import PopularNews from '../components/PopularNews';
 import Events from '../components/Events';
-import axiosInstance from "../util/axiosInstance";
+import axiosClient from "../utils/axiosHelper";
 
 const News = () => {
     const { currentCategory } = useOutletContext();
@@ -13,7 +13,7 @@ const News = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axiosInstance.get('/api/articles/headlines')
+        axiosClient.get('/api/articles/headlines')
             .then(response => {
                 setHeadlines(response.data);
                 setLoading(false);

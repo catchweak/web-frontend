@@ -37,6 +37,9 @@ function Login(props) {
         throw new Error("Login failed");
       }
       // 성공적으로 로그인 시 수행할 작업
+      const { accessToken } = data.data;
+      localStorage.setItem("accessToken", accessToken);
+      
       console.log("Login successful:", data);
       alert("로그인 성공");
       window.location.href = "/";
