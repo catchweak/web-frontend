@@ -1,5 +1,5 @@
 import axios from 'axios';
-import property from '../configs/propertyConfig';
+import property from '@configs/propertyConfig';
 const server = property.catchweekServerHost;
 
 const axiosClient = axios.create({
