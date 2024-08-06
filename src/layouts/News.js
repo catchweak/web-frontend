@@ -5,7 +5,7 @@ import NewsSection from '../components/NewsSection';
 import RecommendedNews from '../components/RecommendedNews';
 import PopularNews from '../components/PopularNews';
 import Events from '../components/Events';
-import axiosClient from "../utils/axiosHelper";
+import axiosClient from "@src/utils/axiosHelper";
 
 const News = () => {
     const { currentCategory } = useOutletContext();

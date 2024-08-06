@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosClient from "../utils/axiosHelper";
+import axiosClient from "@src/utils/axiosHelper";
 
 const NewsSection = ({ title, selectedCategory }) => {
     const navigate = useNavigate();

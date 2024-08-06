@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import axiosClient from "../utils/axiosHelper";
+import axiosClient from "@src/utils/axiosHelper";
 
 const Home = () => {
     const [categories, setCategories] = useState([]);

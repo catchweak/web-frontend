@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import queryString from "query-string";
-import property from "../configs/propertyConfig";
 import "../styles/login.css";
-
-const catchweekServerHost = property.catchweekServerHost;
+import axiosClient from "@src/utils/axiosHelper";
 
 function Login(props) {
   const [credentials, setCredentials] = useState({ userId: "", password: "" });
@@ -24,23 +21,17 @@ function Login(props) {
     setError("");
 
     try {
-      const response = await fetch(catchweekServerHost + "/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(credentials)
-      });
+      const response = await axiosClient.post("/login", credentials);
 
-      const data = await response.json();
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Login failed");
       }
+
       // 성공적으로 로그인 시 수행할 작업
-      const { accessToken } = data.data;
+      const { accessToken } = response.data.data;
       localStorage.setItem("accessToken", accessToken);
       
-      console.log("Login successful:", data);
+      console.log("Login successful:", response.data);
       alert("로그인 성공");
       window.location.href = "/";
     } catch (error) {
