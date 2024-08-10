@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosClient from "@src/utils/axiosHelper";
 import Cookies from 'js-cookie';
+import numberFormatter from '../utils/numberFormatter';
 
 const NewsDetail = () => {
     const { id } = useParams();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [likeStatus, setLikeStatus] = useState(false);
+    const [likeTimer, setTimer] = useState(null);
+
+    const { formatKMB_KOR } = numberFormatter();
 
     const renderBodyWithImages = (body) => {
         const imageTagRegex = /<catch-weak-img>(.*?)<\/catch-weak-img>/g;
@@ -62,9 +67,11 @@ const NewsDetail = () => {
                 setArticle(response.data);
                 setLoading(false);
 
+                checkLikeStatus();
+
                 // 10초 이상 머물렀을 때 조회수 증가 요청
                 const timer = setTimeout(() => {
-                    updateViewCount(id);
+                    updateViewCount();
                 }, 10000); // 10,000 milliseconds = 10 seconds
 
                 return () => clearTimeout(timer); // Cleanup timeout on component unmount
@@ -77,7 +84,7 @@ const NewsDetail = () => {
     }, [id]);
 
     // 조회수 증가 요청
-    const updateViewCount = (articleId) => {
+    const updateViewCount = () => {
         const viewedArticles = JSON.parse(Cookies.get('viewedArticleTime') || '{}');
 
         // 현재 시간을 초 단위로 저장
@@ -86,21 +93,59 @@ const NewsDetail = () => {
         // 12시간(43200초) 동안 조회수를 중복으로 올리지 않도록 설정
         const viewExpiration = 43200;
 
-        if (!viewedArticles[articleId] || currentTime - viewedArticles[articleId] > viewExpiration) {
+        if (!viewedArticles[id] || currentTime - viewedArticles[id] > viewExpiration) {
             // API 호출하여 조회수 업데이트
-            axiosClient.post(`/api/articles/${articleId}/views`)
+            axiosClient.post(`/api/articles/${id}/views`)
                 .then(response => {
                     // 쿠키에 조회 기록 업데이트
-                    viewedArticles[articleId] = currentTime;
+                    viewedArticles[id] = currentTime;
                     Cookies.set('viewedArticleTime', JSON.stringify(viewedArticles), { expires: 1 });
-                    console.log('count!')
                 })
                 .catch(error => {
                     console.log("Error updating view count: " + error);
                 });
-        } else {
-            console.log('expired!')
         }
+    };
+
+    const checkLikeStatus = () => {
+        const userId = Cookies.get('userId');
+
+        axiosClient.get(`/api/articles/${id}/like-status`, { params: { userId: userId } })
+            .then(response => {
+                setLikeStatus(response.data);
+            })
+            .catch(error => {
+                console.log("Error checkLikeStatus: " + error);
+            });
+    };
+
+    const handleLike = () => {
+        setLikeStatus(!likeStatus);
+
+        // 2초 안에 버튼 클릭 시 API 요청 안함
+        if (likeTimer) {
+            clearTimeout(likeTimer);
+            setTimer(null);
+            return
+        }
+
+        const newTimer = setTimeout(() => {
+            const userId = Cookies.get('userId');
+
+            axiosClient.post(`/api/articles/${id}/like`, { userId })
+                .then(() => {
+                })
+                .catch(error => {
+                    console.log("Error handleLike API call: ", error);
+                    // 서버와 동기화 실패 시, 상태를 원래대로 돌림
+                    setLikeStatus(prev => !prev);
+                })
+                .finally(() => {
+                    setTimer(null);
+                });
+        }, 2000);
+
+        setTimer(newTimer);
     };
 
     if (loading) {
@@ -124,6 +169,14 @@ const NewsDetail = () => {
             <div className="news-category">
                 <p>기사원문: <a href={article.originUrl} target="_blank"
                             rel="noopener noreferrer">{article.originUrl}</a></p>
+            </div>
+            <div className="d-flex justify-content-center">
+                <div className="like-button-container">
+                    <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleLike}>
+                        <i className={likeStatus ? "bi bi-star-fill" : "bi bi-star"}></i>
+                        <span className="m-2">{formatKMB_KOR(article.likeCount)}</span>
+                    </button>
+                </div>
             </div>
         </div>
     );
