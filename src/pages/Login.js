@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import "../styles/login.css";
 import axiosClient from "@src/utils/axiosHelper";
@@ -29,15 +30,13 @@ function Login(props) {
         throw new Error("Login failed");
       }
 
-      // On successful login
       const { accessToken } = response.data.data;
       localStorage.setItem("accessToken", accessToken);
-
-      console.log("Login successful:", response.data);
+      Cookies.set("userId", response.data.data.userId, { expires: 1 });
       alert("로그인 성공");
       window.location.href = "/";
     } catch (error) {
-      setError("Login failed. Please check your credentials and try again.");
+      setError("로그인 실패입니다. 다시 로그인해주세요.");
     } finally {
       setLoading(false);
     }

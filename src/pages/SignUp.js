@@ -23,7 +23,7 @@ function Signup(props) {
     event.preventDefault();
 
     try {
-      const response = await axiosClient.post("/signup", formData); // Removed JSON.stringify as axiosClient handles this
+      const response = await axiosClient.post("/signup", formData);
 
       if (response.status === 201) {
         console.log("회원가입 성공:", response.data);

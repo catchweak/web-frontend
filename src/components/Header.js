@@ -109,7 +109,10 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
               </div>
               <div className="user-menu ms-3">
                 {isLoggedIn ? (
-                  <button className="nav-link btn" onClick={handleLogout}>
+                  <button
+                    className="nav-link text-white btn"
+                    onClick={handleLogout}
+                  >
                     Logout
                   </button>
                 ) : (
