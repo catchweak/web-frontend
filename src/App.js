@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import NewsDetail from "./pages/NewsDetail";
 import Login from "./pages/Login";
 import News from "./layouts/News";
+import Signup from "./pages/SignUp"
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="category/:code" element={<News />} />
           <Route path="news/:id" element={<NewsDetail />} />
           <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
         </Route>
       </Routes>
     </Router>
