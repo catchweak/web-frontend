@@ -15,7 +15,7 @@ const numberFormatter = () => {
             return formatted;
         }
 
-        return parseInt(number);
+        return number.toFixed();
     }
 
     const mapKMB_KOR = [

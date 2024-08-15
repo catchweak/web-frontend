@@ -122,3 +122,34 @@
     font-size: 1em;
     color: #007bff;
 }
+
+
+.like-section {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.like-button {
+    background-color: #ff6f61; /* 회사의 색상에 맞게 조정 */
+    color: white;
+    border: none;
+    padding: 6px 12px; /* 버튼 사이즈 줄임 */
+    font-size: 12px; /* 글자 크기 조정 */
+    cursor: pointer;
+    border-radius: 4px; /* 약간의 둥근 모서리 */
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.like-button:hover {
+    background-color: #e55b50; /* 호버 시 색상 변경 */
+}
+
+.like-count {
+    font-size: 12px; /* 글자 크기 조정 */
+    color: #555;
+    margin-left: 5px;
+}
