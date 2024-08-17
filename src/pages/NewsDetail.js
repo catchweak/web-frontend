@@ -120,6 +120,13 @@ const NewsDetail = () => {
     };
 
     const handleLike = () => {
+        const userId = Cookies.get('userId');
+
+        if (!userId || userId === "undefined") {
+            alert("로그인 후 이용할 수 있습니다.");
+            return;
+        }
+
         setLikeStatus(!likeStatus);
 
         // 2초 안에 버튼 클릭 시 API 요청 안함
@@ -130,10 +137,12 @@ const NewsDetail = () => {
         }
 
         const newTimer = setTimeout(() => {
-            const userId = Cookies.get('userId');
-
             axiosClient.post(`/api/articles/${id}/like`, { userId })
                 .then(() => {
+                    setArticle(prev => ({
+                        ...prev,
+                        likeCount: (likeStatus) ? prev.likeCount - 1 : prev.likeCount + 1
+                    }));
                 })
                 .catch(error => {
                     console.log("Error handleLike API call: ", error);
@@ -142,10 +151,37 @@ const NewsDetail = () => {
                 })
                 .finally(() => {
                     setTimer(null);
-                });
+                })
         }, 2000);
 
         setTimer(newTimer);
+    };
+
+    const handleShare = () => {
+        const userId = Cookies.get('userId');
+
+        if (!userId || userId === "undefined") {
+            alert("로그인 후 이용할 수 있습니다.");
+            return;
+        }
+
+        const shareUrl = window.location.href;
+
+        // 클립보드에 URL 복사
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            alert("뉴스 링크가 클립보드에 복사되었습니다.")
+
+            // 뉴스 공유 API 호출
+            axiosClient.post(`/api/articles/${id}/share`, { userId })
+                .then(() => {
+                })
+                .catch(error => {
+                    console.log("Error sharing article: " + error);
+                });
+
+        }).catch((error) => {
+            console.error("Error URL to clipboard:", error);
+        });
     };
 
     if (loading) {
@@ -175,6 +211,11 @@ const NewsDetail = () => {
                     <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleLike}>
                         <i className={likeStatus ? "bi bi-star-fill" : "bi bi-star"}></i>
                         <span className="m-2">{formatKMB_KOR(article.likeCount)}</span>
+                    </button>
+                </div>
+                <div className="share-button-container ms-2">
+                    <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleShare}>
+                        <i className="bi bi-share-fill"></i>
                     </button>
                 </div>
             </div>
