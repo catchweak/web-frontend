@@ -95,7 +95,7 @@ const NewsDetail = () => {
 
         if (!viewedArticles[id] || currentTime - viewedArticles[id] > viewExpiration) {
             // API 호출하여 조회수 업데이트
-            axiosClient.post(`/api/articles/${id}/views`)
+            axiosClient.post(`/api/articles/views`, { articleId: id })
                 .then(response => {
                     // 쿠키에 조회 기록 업데이트
                     viewedArticles[id] = currentTime;
@@ -109,6 +109,10 @@ const NewsDetail = () => {
 
     const checkLikeStatus = () => {
         const userId = Cookies.get('userId');
+
+        if (!userId || userId === "undefined") {
+            return;
+        }
 
         axiosClient.get(`/api/articles/${id}/like-status`, { params: { userId: userId } })
             .then(response => {
@@ -137,7 +141,7 @@ const NewsDetail = () => {
         }
 
         const newTimer = setTimeout(() => {
-            axiosClient.post(`/api/articles/${id}/like`, { userId })
+            axiosClient.post(`/api/articles/like`, { userId: userId, articleId: id })
                 .then(() => {
                     setArticle(prev => ({
                         ...prev,
@@ -172,7 +176,7 @@ const NewsDetail = () => {
             alert("뉴스 링크가 클립보드에 복사되었습니다.")
 
             // 뉴스 공유 API 호출
-            axiosClient.post(`/api/articles/${id}/share`, { userId })
+            axiosClient.post(`/api/articles/share`, { userId : userId, articleId : id })
                 .then(() => {
                 })
                 .catch(error => {
