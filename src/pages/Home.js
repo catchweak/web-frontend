@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import axiosClient from "@src/utils/axiosHelper";
 
 const Home = () => {
+    // ****************     init values      **************** //
     const [categories, setCategories] = useState([]);
-    const [currentCategory, setCurrentCategory] = useState(null);
-    const location = useLocation();
+    const [currentCategory, setCurrentCategory] = useState();
 
+    // ****************     loading(rendering) hook      **************** //
+    // fetch categories
     useEffect(() => {
         axiosClient.get('/api/categories')
             .then(response => {
                 setCategories(response.data);
+
+                const initCategory = response.data.find(category => category.code === response.data[0].code);
+                setCurrentCategory(initCategory);
             })
             .catch(error => console.log("Error fetching categories: " + error));
     }, []);
 
-    useEffect(() => {
-        if (location.pathname.startsWith("/category/")) {
-            const categoryCode = location.pathname.split("/category/")[1];
-            const selectedCategory = categories.find(category => category.code === categoryCode);
-            if (selectedCategory) {
-                setCurrentCategory(selectedCategory);
-            }
-        }
-    }, [location, categories]);
-
+    // ****************     component event handler      **************** //
     const handleCategorySelect = (category) => {
         setCurrentCategory(category);
     };
 
+    // ****************     UI      **************** //
     return (
         <div>
-            <Header topCategories={categories} onTopCategorySelect={handleCategorySelect} />
+            <Header categories={categories} currentCategory={currentCategory} onCategorySelect={handleCategorySelect} />
             <div className="main-content">
                 <Outlet context={{ currentCategory }} />
             </div>

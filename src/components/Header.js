@@ -1,52 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-const Header = ({ topCategories = [], onTopCategorySelect }) => {
-  const [topCategory, setTopCategory] = useState(null);
+const Header = ({ categories = [], currentCategory, onCategorySelect }) => {
+  // ****************     init values      **************** //
   const [subCategories, setSubCategories] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  // ****************     loading(rendering) hook      **************** //
   useEffect(() => {
     // Check if JWT token exists in localStorage
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
   }, []);
 
+  // sub category 세팅
   useEffect(() => {
-    if (topCategories.length > 0) {
-      const initialTopCategory = topCategories.find(
-        (category) => !category.parentCode
-      );
-      if (initialTopCategory) {
-        setTopCategory(initialTopCategory);
-        setSubCategories([
-          {
-            code: initialTopCategory.code,
-            name: "전체",
-            parentCode: initialTopCategory.code
-          },
-          ...topCategories.filter(
-            (category) => category.parentCode === initialTopCategory.code
-          )
-        ]);
-        onTopCategorySelect(initialTopCategory);
-      }
-    }
-  }, [topCategories, onTopCategorySelect]);
+    if(currentCategory == null || currentCategory == undefined) return
 
-  const handleTopCategoryClick = (category) => {
-    setTopCategory(category);
-    setSubCategories([
-      { code: category.code, name: "전체", parentCode: category.code },
-      ...topCategories.filter((cat) => cat.parentCode === category.code)
-    ]);
-    onTopCategorySelect(category);
-    navigate(`/category/${category.code}`);
+    // 선택한 item이 top category일 경우에만 sub categories 세팅
+    if(currentCategory.parentCode == null) {
+      setSubCategories([{
+        code: currentCategory.code,
+        name: "전체",
+        parentCode: currentCategory.code
+      },
+        ...categories.filter(
+            (category) => category.parentCode === currentCategory.code
+        )
+      ]);
+    }
+  }, [onCategorySelect]);
+
+  // ****************     component event handler      **************** //
+  const handleCategoryClick = (categoryParam) => {
+    onCategorySelect(categoryParam);
   };
 
-  const handleSubCategoryClick = (category) => {
-    navigate(`/category/${category.code}`);
+  const handleSubCategoryClick = (categoryParam) => {
+    onCategorySelect(categoryParam);
   };
 
   const handleLogoClick = () => {
@@ -59,6 +51,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
     navigate("/");
   };
 
+  // ****************     UI      **************** //
   return (
     <>
       <header className="navbar navbar-expand-lg navbar-dark main-bg">
@@ -83,7 +76,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto">
-              {topCategories
+              {categories
                 .filter((category) => !category.parentCode)
                 .map((category) => (
                   <li
@@ -92,7 +85,7 @@ const Header = ({ topCategories = [], onTopCategorySelect }) => {
                   >
                     <button
                       className="nav-link btn"
-                      onClick={() => handleTopCategoryClick(category)}
+                      onClick={() => handleCategoryClick(category)}
                     >
                       {category.name}
                     </button>
