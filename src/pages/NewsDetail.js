@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axiosClient from "@src/utils/axiosHelper";
 import Cookies from 'js-cookie';
 import numberFormatter from '../utils/numberFormatter';
+import Comments from './Comments';
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -223,6 +224,7 @@ const NewsDetail = () => {
                     </button>
                 </div>
             </div>
+            <Comments articleId={id} />
         </div>
     );
 };
