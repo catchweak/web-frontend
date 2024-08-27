@@ -167,16 +167,18 @@
     color: #333;
 }
 
-.comment-reply{
-    background-color: #eff1f6;
-    padding: 20px;
-}
-
 .comment {
     background-color: #fff;
     padding: 5px 10px 5px 10px;
     border-bottom: 1px solid;
-    border-bottom-color: #f0f0f0;
+    border-bottom-color: #e2e2e2;
+}
+
+.comment-reply{
+    background-color: #eff1f6;
+    padding: 20px;
+    border-bottom: 1px solid;
+    border-bottom-color: #e2e2e2;
 }
 
 .comment p {
@@ -242,4 +244,35 @@
 .pagination-controls button:hover:not(:disabled) {
     background-color: #2c3e50;
     color: #fff;
+}
+
+.comment-actions {
+    float: right;
+    font-size: 12px;
+    color: #007bff;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.comment-actions .comment-action:hover {
+    text-decoration: underline;
+}
+
+.edit-comment-textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.save-edit-btn, .cancel-edit-btn {
+    font-size: 12px;
+    margin-right: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+}
+
+.save-edit-btn:hover, .cancel-edit-btn:hover {
+    text-decoration: underline;
 }

@@ -10,7 +10,10 @@ const Replies = ({ commentId }) => {
     const [loading, setLoading] = useState(true);
     const [replyText, setReplyText] = useState('');
     const [userId, setUserID] = useState(Cookies.get('userId'));
-    const [isOpen, setIsOpen] = useState(false); // t
+    const [isOpen, setIsOpen] = useState(false);
+    const [replyCount, setReplyCount] = useState(0)
+    const [editReplyId, setEditReplyId] = useState(null);
+    const [editReplyText, setEditReplyText] = useState('');
 
     useEffect(() => {
         fetchReplies(page);
@@ -26,12 +29,13 @@ const Replies = ({ commentId }) => {
         })
             .then(response => {
                 if (page === 0) {
-                    setReplies(response.data.content)
+                    setReplies(response.data.replies.content)
+                    setReplyCount(response.data.count)
                 } else {
-                    setReplies(prevReplies => [...prevReplies, ...response.data.content])
+                    setReplies(prevReplies => [...prevReplies, ...response.data.replies.content])
                 }
 
-                setHasMore(!response.data.last)
+                setHasMore(!response.data.replies.last)
                 setLoading(false)
             })
             .catch(error => {
@@ -48,11 +52,42 @@ const Replies = ({ commentId }) => {
 
         if (replyText.trim()) {
             axiosClient.post(`/api/articles/comment/reply`, { userId: userId, parentCommentId: commentId, comment: replyText })
-                .then(() => {
-                    fetchReplies(page);
+                .then(response => {
+                    setReplies(prevReplies => [...prevReplies, response.data]);
                     setReplyText('');
+                    setReplyCount(prevCount => prevCount + 1);
                 })
                 .catch(error => console.log("Error adding reply: " + error));
+        }
+    };
+
+    const handleEditReply = (replyId, currentText) => {
+        setEditReplyId(replyId);
+        setEditReplyText(currentText);
+    };
+
+    const handleSaveEdit = (replyId) => {
+        if (editReplyText.trim()) {
+            axiosClient.put(`/api/articles/comment/reply`, { userId: userId, replyId: replyId, comment: editReplyText })
+                .then(() => {
+                    setReplies(prevReplies => prevReplies.map(reply =>
+                        reply.id === replyId ? { ...reply, comment: editReplyText, updated: true } : reply
+                    ));
+                    setEditReplyId(null);
+                    setEditReplyText('');
+                })
+                .catch(error => console.log("Error editing reply: " + error));
+        }
+    };
+
+    const handleDeleteReply = (replyId) => {
+        if (window.confirm("정말 삭제하시겠습니까?")) {
+            axiosClient.put(`/api/articles/comment/reply/delete`, { userId: userId, replyId: replyId, comment: '' })
+                .then(() => {
+                    setReplies(prevReplies => prevReplies.filter(reply => reply.id !== replyId));
+                    setReplyCount(prevCount => prevCount - 1);
+                })
+                .catch(error => console.log("Error deleting reply: " + error));
         }
     };
 
@@ -67,14 +102,36 @@ const Replies = ({ commentId }) => {
     return (
         <div className="replies-section">
             <div className="reply-toggle" onClick={toggleReply}>
-                답글 {replies ? replies.length : 0} {isOpen ? "▲" : "▼"}
+                답글 {replyCount} {isOpen ? "▲" : "▼"}
             </div>
             {isOpen && (
                 <>
                     {replies.map(reply => (
                         <div key={reply.id} className="comment-reply">
-                            <small>{reply.user.userId} | {format(new Date(reply ? reply.createdAt : ''), 'yyyy.MM.dd HH:mm')}</small>
-                            <p>{reply.comment}</p>
+                            <small>{reply.user.userId} | {format(new Date(reply ? reply.createdAt : ''), 'yyyy.MM.dd HH:mm')} {reply.updated ? '(수정됨)' : ''}</small>
+                            {editReplyId === reply.id ? (
+                                <div>
+                                    <textarea
+                                        value={editReplyText}
+                                        onChange={(e) => setEditReplyText(e.target.value)}
+                                        className="edit-comment-textarea"
+                                    ></textarea>
+                                    <div className="comment-actions">
+                                        <span onClick={() => handleSaveEdit(reply.id)} className="comment-action save-edit-btn">저장</span>
+                                        <span onClick={() => setEditReplyId(null)} className="comment-action cancel-edit-btn">취소</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {reply.user.userId === userId && (
+                                        <div className="comment-actions">
+                                            <span onClick={() => handleEditReply(reply.id, reply.comment)} className="comment-action">수정 </span>
+                                            <span onClick={() => handleDeleteReply(reply.id)} className="comment-action">삭제</span>
+                                        </div>
+                                    )}
+                                    <p>{reply.comment}</p>
+                                </>
+                            )}
                         </div>
                     ))}
                     {loading && (
