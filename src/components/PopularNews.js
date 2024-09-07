@@ -42,7 +42,7 @@ const PopularNews = () => {
                 </div>
             ) : (
                 <div className="headline-banner">
-                    <h2>인기 캐치</h2>
+                    <h2>주간 인기 캐치가 없습니다.</h2>
                     {popularNews.map((article, index) => (
                         <div key={index} className="headline-item" onClick={() => handleArticleClick(article.id)}>
                             <img src={article.imgUrl} alt={article.headline}/>
