@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import axiosClient from "@src/utils/axiosHelper";
 
 const NewsSection = ({ title, selectedCategory }) => {
+    // ****************     init values      **************** //
     const navigate = useNavigate();
     const [news, setNews] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
 
+    // ****************     loading(rendering) hook      **************** //
     useEffect(() => {
         if (selectedCategory) {
             setNews([]);
@@ -44,6 +46,7 @@ const NewsSection = ({ title, selectedCategory }) => {
             });
     };
 
+    // ****************     component event handler      **************** //
     const loadMoreArticles = () => {
         setPage(prevPage => prevPage + 1);
     };
@@ -52,6 +55,7 @@ const NewsSection = ({ title, selectedCategory }) => {
         navigate(`/news/${id}`);
     };
 
+    // ****************     UI      **************** //
     return (
         <section>
             <h2>{title}</h2>
