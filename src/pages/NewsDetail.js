@@ -86,17 +86,20 @@ const NewsDetail = () => {
 
     // 조회수 증가 요청
     const updateViewCount = () => {
+        const userId = Cookies.get('userId');
+
         const viewedArticles = JSON.parse(Cookies.get('viewedArticleTime') || '{}');
 
         // 현재 시간을 초 단위로 저장
         const currentTime = Math.floor(Date.now() / 1000);
 
-        // 12시간(43200초) 동안 조회수를 중복으로 올리지 않도록 설정
-        const viewExpiration = 43200;
+        // 30분(1800초) 동안 조회수를 중복으로 올리지 않도록 설정
+        // 30분 이후에는 재방문으로 조회수 증가 판정
+        const viewExpiration = 1800;
 
         if (!viewedArticles[id] || currentTime - viewedArticles[id] > viewExpiration) {
             // API 호출하여 조회수 업데이트
-            axiosClient.post(`/api/articles/views`, { articleId: id })
+            axiosClient.post(`/api/articles/views`, { articleId: id, userId: userId })
                 .then(response => {
                     // 쿠키에 조회 기록 업데이트
                     viewedArticles[id] = currentTime;

@@ -26,6 +26,7 @@
 .headline-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .headline-item img {
@@ -35,11 +36,13 @@
 
 .headline-text {
     padding: 20px;
+    color: white;
 }
 
 .headline-text h2 {
     margin: 0;
     font-size: 1.5em;
+    color: white;
 }
 
 .headline-text p {
