@@ -60,7 +60,6 @@ const HotTopicChart = ({onTopicSelect}) => {
     useEffect(() => {
         axiosClient.get('/api/keyword/hot')
             .then(response => {
-                console.log('keywords: ', response.data)
                 const keywordFrequency = response.data
 
                 // 가져온 데이터를 차트 데이터에 반영
