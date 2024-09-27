@@ -4,6 +4,7 @@ import axiosClient from "@src/utils/axiosHelper";
 import Cookies from 'js-cookie';
 import numberFormatter from '../utils/numberFormatter';
 import Comments from './Comments';
+import VideoPlayer from '../components/VideoPlayer';
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -201,34 +202,40 @@ const NewsDetail = () => {
     }
 
     return (
+      <>
         <div className="news-detail">
-            <h1>{article.headline}</h1>
-            <div className="news-meta">
-                <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
-            </div>
-            <blockquote className="news-summary">{article.summary}</blockquote>
-            <div className="news-body">
-                {renderBodyWithImages(article.body)}
-            </div>
-            <div className="news-category">
-                <p>기사원문: <a href={article.originUrl} target="_blank"
-                            rel="noopener noreferrer">{article.originUrl}</a></p>
-            </div>
-            <div className="d-flex justify-content-center">
-                <div className="like-button-container">
-                    <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleLike}>
-                        <i className={likeStatus ? "bi bi-star-fill" : "bi bi-star"}></i>
-                        <span className="m-2">{formatKMB_KOR(article.likeCount)}</span>
-                    </button>
-                </div>
-                <div className="share-button-container ms-2">
-                    <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleShare}>
-                        <i className="bi bi-share-fill"></i>
-                    </button>
-                </div>
-            </div>
-            <Comments articleId={id} />
-        </div>
+              <h1>{article.headline}</h1>
+              <div>
+                <h1>Video Player Example</h1>
+                <VideoPlayer title={'영상제목'} />
+              </div>
+              <div className="news-meta">
+                  <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
+              </div>
+              <blockquote className="news-summary">{article.summary}</blockquote>
+              <div className="news-body">
+                  {renderBodyWithImages(article.body)}
+              </div>
+              <div className="news-category">
+                  <p>기사원문: <a href={article.originUrl} target="_blank"
+                              rel="noopener noreferrer">{article.originUrl}</a></p>
+              </div>
+              <div className="d-flex justify-content-center">
+                  <div className="like-button-container">
+                      <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleLike}>
+                          <i className={likeStatus ? "bi bi-star-fill" : "bi bi-star"}></i>
+                          <span className="m-2">{formatKMB_KOR(article.likeCount)}</span>
+                      </button>
+                  </div>
+                  <div className="share-button-container ms-2">
+                      <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleShare}>
+                          <i className="bi bi-share-fill"></i>
+                      </button>
+                  </div>
+              </div>
+              <Comments articleId={id} />
+          </div>
+      </>
     );
 };
 
