@@ -82,8 +82,7 @@ const HotTopicChart = ({onTopicSelect}) => {
             });
 
         setTimeout(() => {
-            setChartData(chartData);
-        }, 500);
+        });
     }, []);
 
     const chartOptions = {
