@@ -9,5 +9,10 @@ module.exports = {
             tsConfigPath : "./tsconfig.json",
         }
     }
-  ]
+  ],
+  babel: {
+    plugins: [
+      process.env.NODE_ENV === 'development' && 'react-refresh/babel',
+    ].filter(Boolean),
+  },
 };
