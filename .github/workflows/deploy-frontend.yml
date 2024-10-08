@@ -55,9 +55,9 @@ jobs:
       # properties.json 파일 생성
       - name: Create properties.json
         run: |
-          mkdir -p ./src/configs
+          npm install @babel/plugin-proposal-private-property-in-object --save-dev
+          
           echo -e "${{ env.PROPERTIES_JSON }}" > ./src/configs/properties.json
-          cat ./src/configs/properties.json
 
       # React 앱 빌드
       - name: Build the React app
