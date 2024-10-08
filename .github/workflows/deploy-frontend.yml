@@ -50,13 +50,13 @@ jobs:
 
       # npm 의존성 설치
       - name: Install dependencies
-        run: npm install --include=dev
+        run: |
+          npm install @babel/plugin-proposal-private-property-in-object --save-dev
+          npm install --include=dev
 
       # properties.json 파일 생성
       - name: Create properties.json
         run: |
-          npm install @babel/plugin-proposal-private-property-in-object --save-dev
-          
           echo -e "${{ env.PROPERTIES_JSON }}" > ./src/configs/properties.json
 
       # React 앱 빌드
