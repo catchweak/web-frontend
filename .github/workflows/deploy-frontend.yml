@@ -55,6 +55,7 @@ jobs:
       # properties.json 파일 생성
       - name: Create properties.json
         run: |
+          mkdir -p ./src/configs
           echo -e "${{ env.PROPERTIES_JSON }}" > ./src/configs/properties.json
 
       # React 앱 빌드
