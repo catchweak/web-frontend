@@ -8,7 +8,7 @@ const VideoPlayer = ({ title, rank }) => {
     const fetchVideo = async () => {
       try {
         const response = await axiosClient.get(
-          `/api/videos/search?${title}&rank=${rank}`,
+          `/api/videos/search?title=${title}&rank=${rank}`,
           {
             responseType: "blob"
           }
