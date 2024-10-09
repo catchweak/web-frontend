@@ -57,6 +57,8 @@ jobs:
       - name: Create property.json
         run: |
           echo -e "${{ env.PROPERTY_JSON }}" > ./src/configs/property.json
+          
+          cat ./src/configs/property.json
 
       # React 앱 빌드
       - name: Build the React app
