@@ -4,7 +4,6 @@ import axiosClient from "@src/utils/axiosHelper";
 import Cookies from 'js-cookie';
 import numberFormatter from '../utils/numberFormatter';
 import Comments from './Comments';
-import VideoPlayer from '../components/VideoPlayer';
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -205,10 +204,6 @@ const NewsDetail = () => {
       <>
         <div className="news-detail">
               <h1>{article.headline}</h1>
-              <div>
-                <h1>Video Player Example</h1>
-                <VideoPlayer title={'영상제목'} />
-              </div>
               <div className="news-meta">
                   <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
               </div>
