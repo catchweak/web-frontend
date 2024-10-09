@@ -38,6 +38,8 @@ jobs:
       # 배포 브랜치 지정
       - name: Checkout branch
         uses: actions/checkout@v2
+        with:
+          ref: develop
 
       # Node.js 모듈 캐싱
       - name: Cache Node.js modules
