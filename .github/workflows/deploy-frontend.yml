@@ -52,11 +52,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --include=dev
-
-      # npm 의존성 설치
-      - name: Install babel plugin
-        run: |
-          npm install @babel/plugin-proposal-private-property-in-object --save-dev
       
       # properties.json 파일 생성
       - name: Create properties.json
