@@ -12,11 +12,11 @@ const Header = ({ categories = [], currentCategory, onCategorySelect }) => {
     // Check if JWT token exists in localStorage
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
-  }, []);
+  }, [categories, currentCategory]);
 
   // sub category 세팅
   useEffect(() => {
-    if(currentCategory == null || currentCategory == undefined) return
+    if(currentCategory === null || currentCategory === undefined) return
 
     // 선택한 item이 top category일 경우에만 sub categories 세팅
     if(currentCategory.parentCode == null) {
@@ -30,7 +30,7 @@ const Header = ({ categories = [], currentCategory, onCategorySelect }) => {
         )
       ]);
     }
-  }, [onCategorySelect]);
+  }, [onCategorySelect, categories, currentCategory]);
 
   // ****************     component event handler      **************** //
   const handleCategoryClick = (categoryParam) => {

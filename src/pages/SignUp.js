@@ -182,19 +182,27 @@ function Signup(props) {
                       <a
                         href="#!"
                         className="btn btn-lg btn-outline-danger p-3 lh-1"
-                      ></a>
+                      >
+                        <i className="fa fa-heart"></i> Like
+                      </a>
                       <a
                         href="#!"
                         className="btn btn-lg btn-outline-primary p-3 lh-1"
-                      ></a>
+                      >
+                        <i className="fa fa-comment"></i> Comment
+                      </a>
                       <a
                         href="#!"
                         className="btn btn-lg btn-outline-info p-3 lh-1"
-                      ></a>
+                      >
+                        <i className="fa fa-share"></i> Share
+                      </a>
                       <a
                         href="#!"
                         className="btn btn-lg btn-outline-dark p-3 lh-1"
-                      ></a>
+                      >
+                        <i className="fa fa-bookmark"></i> Save
+                      </a>
                     </div>
                   </div>
                 </div>

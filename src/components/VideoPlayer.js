@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "@src/utils/axiosHelper";
 
-const VideoPlayer = ({ title }) => {
+const VideoPlayer = ({ title, rank }) => {
   const [videoSrc, setVideoSrc] = useState(null);
 
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        title = "김예지";
-        const response = await axiosClient.get(`/api/videos/search/${title}`, {
-          responseType: "blob"
-        });
+        const response = await axiosClient.get(
+          `/api/videos/search?title=${title}&rank=${rank}`,
+          {
+            responseType: "blob"
+          }
+        );
 
         const videoUrl = URL.createObjectURL(response.data);
         setVideoSrc(videoUrl);
@@ -20,7 +22,7 @@ const VideoPlayer = ({ title }) => {
     };
 
     fetchVideo();
-  }, [title]);
+  }, [title, rank]);
 
   return (
     <div>

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import axiosClient from "@src/utils/axiosHelper";
 import Cookies from 'js-cookie';
 import numberFormatter from '../utils/numberFormatter';
 import Comments from './Comments';
-import VideoPlayer from '../components/VideoPlayer';
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -63,30 +62,8 @@ const NewsDetail = () => {
         });
     }
 
-    useEffect(() => {
-        axiosClient.get(`/api/articles/${id}`)
-            .then(response => {
-                setArticle(response.data);
-                setLoading(false);
-
-                checkLikeStatus();
-
-                // 10초 이상 머물렀을 때 조회수 증가 요청
-                const timer = setTimeout(() => {
-                    updateViewCount();
-                }, 10000); // 10,000 milliseconds = 10 seconds
-
-                return () => clearTimeout(timer); // Cleanup timeout on component unmount
-
-            })
-            .catch(error => {
-                console.log("Error fetching article: " + error);
-                setLoading(false);
-            });
-    }, [id]);
-
     // 조회수 증가 요청
-    const updateViewCount = () => {
+    const updateViewCount = useCallback(() => {
         const userId = Cookies.get('userId');
 
         const viewedArticles = JSON.parse(Cookies.get('viewedArticleTime') || '{}');
@@ -110,9 +87,9 @@ const NewsDetail = () => {
                     console.log("Error updating view count: " + error);
                 });
         }
-    };
+    }, [id]);
 
-    const checkLikeStatus = () => {
+    const checkLikeStatus = useCallback(() => {
         const userId = Cookies.get('userId');
 
         if (!userId || userId === "undefined") {
@@ -126,7 +103,29 @@ const NewsDetail = () => {
             .catch(error => {
                 console.log("Error checkLikeStatus: " + error);
             });
-    };
+    }, [id]);
+
+    useEffect(() => {
+        axiosClient.get(`/api/articles/${id}`)
+            .then(response => {
+                setArticle(response.data);
+                setLoading(false);
+
+                checkLikeStatus();
+
+                // 10초 이상 머물렀을 때 조회수 증가 요청
+                const timer = setTimeout(() => {
+                    updateViewCount();
+                }, 10000); // 10,000 milliseconds = 10 seconds
+
+                return () => clearTimeout(timer); // Cleanup timeout on component unmount
+
+            })
+            .catch(error => {
+                console.log("Error fetching article: " + error);
+                setLoading(false);
+            });
+    }, [id, checkLikeStatus, updateViewCount]);
 
     const handleLike = () => {
         const userId = Cookies.get('userId');
@@ -205,10 +204,6 @@ const NewsDetail = () => {
       <>
         <div className="news-detail">
               <h1>{article.headline}</h1>
-              <div>
-                <h1>Video Player Example</h1>
-                <VideoPlayer title={'영상제목'} />
-              </div>
               <div className="news-meta">
                   <span>{article.author}</span> | <span>{article.articleCreatedAt}</span>
               </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-
+import { setTokenWithExpiry } from "../utils/auth";
 import "../styles/login.css";
 import axiosClient from "@src/utils/axiosHelper";
 
@@ -31,7 +31,7 @@ function Login(props) {
       }
 
       const { accessToken } = response.data.data;
-      localStorage.setItem("accessToken", accessToken);
+      setTokenWithExpiry("accessToken", accessToken, 5 * 60 * 60 * 1000);
       Cookies.set("userId", response.data.data.userId, { expires: 1 });
       alert("로그인 성공");
       window.location.href = "/";
