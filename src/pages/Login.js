@@ -31,7 +31,7 @@ function Login(props) {
       }
 
       const { accessToken } = response.data.data;
-      setTokenWithExpiry("accessToken", accessToken, 24 * 60 * 60 * 1000);
+      setTokenWithExpiry("accessToken", accessToken, 5 * 60 * 60 * 1000);
       Cookies.set("userId", response.data.data.userId, { expires: 1 });
       alert("로그인 성공");
       window.location.href = "/";

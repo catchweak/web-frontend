@@ -10,22 +10,17 @@ import CheckLocalStorage from "./routes/CheckLocalStorage";
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <CheckLocalStorage>
-              <Home />
-            </CheckLocalStorage>
-          }
-        >
-          <Route index element={<News />} />
-          <Route path="category/:code" element={<News />} />
-          <Route path="news/:id" element={<NewsDetail />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-        </Route>
-      </Routes>
+      <CheckLocalStorage>
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route index element={<News />} />
+            <Route path="category/:code" element={<News />} />
+            <Route path="news/:id" element={<NewsDetail />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
+        </Routes>
+      </CheckLocalStorage>
     </Router>
   );
 };
