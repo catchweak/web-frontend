@@ -15,7 +15,7 @@ const HotTopics = () => {
         if (page > 0) {
             fetchArticles(page, selectedTopic);
         }
-    }, [page]);
+    }, [page, selectedTopic]);
 
     const fetchArticles = (pageToFetch, topic) => {
         setLoading(true);

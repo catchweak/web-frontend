@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import axiosClient from '@src/utils/axiosHelper';
 import Cookies from "js-cookie";
 import { format } from 'date-fns';
@@ -9,17 +9,13 @@ const Replies = ({ commentId }) => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [replyText, setReplyText] = useState('');
-    const [userId, setUserID] = useState(Cookies.get('userId'));
+    const [userId] = useState(Cookies.get('userId'));
     const [isOpen, setIsOpen] = useState(false);
     const [replyCount, setReplyCount] = useState(0)
     const [editReplyId, setEditReplyId] = useState(null);
     const [editReplyText, setEditReplyText] = useState('');
 
-    useEffect(() => {
-        fetchReplies(page);
-    }, [page]);
-
-    const fetchReplies = (page) => {
+    const fetchReplies = useCallback(() => {
         setLoading(true)
         axiosClient.get(`/api/articles/${commentId}/replies`, {
             params: {
@@ -42,7 +38,11 @@ const Replies = ({ commentId }) => {
                 console.log("Error fetching replies: " + error);
                 setLoading(false)
             });
-    };
+    }, [commentId, page]);
+
+    useEffect(() => {
+        fetchReplies();
+    }, [page, fetchReplies]);
 
     const handleAddReply = () => {
         if (!userId || userId === "undefined") {

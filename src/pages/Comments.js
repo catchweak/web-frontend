@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import axiosClient from '@src/utils/axiosHelper';
 import Cookies from "js-cookie";
 import { format } from 'date-fns';
@@ -10,16 +10,12 @@ const Comments = ({ articleId }) => {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [newComment, setNewComment] = useState('');
-    const [userId, setUserID] = useState(Cookies.get('userId'));
+    const [userId] = useState(Cookies.get('userId'));
     const [commentCount, setCommentCount] = useState(0)
     const [editCommentId, setEditCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
 
-    useEffect(() => {
-        fetchComments(page);
-    }, [page]);
-
-    const fetchComments = (page) => {
+    const fetchComments = useCallback(() => {
         setLoading(true)
 
         axiosClient.get(`/api/articles/${articleId}/comments`, {
@@ -43,7 +39,11 @@ const Comments = ({ articleId }) => {
                 console.log("Error fetching comments: " + error);
                 setLoading(false)
             });
-    };
+    }, [page, articleId]);
+
+    useEffect(() => {
+        fetchComments();
+    }, [page, fetchComments]);
 
     const handleLoadMoreComments = () => {
         setPage(prevPage => prevPage + 1)

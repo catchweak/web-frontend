@@ -13,7 +13,6 @@ const chartLabel = {
         chart.data.datasets.forEach((dataset, i) => {
             const meta = chart.getDatasetMeta(i);
             meta.data.forEach((element, index) => {
-                const { x, y } = element.tooltipPosition();
                 const label = data.labels[index];
                 const radius = element.outerRadius * 0.7;
                 const midAngle = (element.startAngle + element.endAngle) / 2;
@@ -36,7 +35,6 @@ ChartJS.register(chartLabel);
 const HotTopicChart = ({onTopicSelect}) => {
     // ****************     init values      **************** //
     const [loading, setLoading] = useState(true);
-    const [topics, setTopics] = useState([])
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: [

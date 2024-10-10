@@ -24,7 +24,7 @@ const NewsSection = ({ title, selectedCategory }) => {
         if (page > 0) {
             fetchArticles(page, selectedCategory);
         }
-    }, [page]);
+    }, [page, selectedCategory]);
 
     const fetchArticles = (pageToFetch, category) => {
         setLoading(true);
