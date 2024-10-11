@@ -56,7 +56,7 @@ jobs:
           npm install --include=dev
       
       # property.json 파일 생성
-      - name: Create property.json with dynamic AWS_EC2_DNS
+      - name: Create property.json
         run: |
           echo "${{ env.PROPERTY_JSON }}" | jq --arg dns "$AWS_EC2_DNS" '.publicURL = "http://\($dns)" | .catchweekServerHost = "http://\($dns):8080"' > ./src/configs/property.json
           
