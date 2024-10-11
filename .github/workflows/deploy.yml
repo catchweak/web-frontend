@@ -92,6 +92,7 @@ jobs:
       - name: Restart Nginx (Optional)
         run: |
           ssh ${{ env.AWS_EC2_USERNAME }}@${{ env.AWS_EC2_DNS }} << EOF
+            sudo rm -rf /var/www/html/*
             sudo mv /home/ubuntu/catchweak-web/* /var/www/html/
             sudo chown -R www-data:www-data /var/www/html/
             sudo systemctl restart nginx
