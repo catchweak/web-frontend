@@ -58,7 +58,7 @@ jobs:
       # property.json 파일 생성
       - name: Create property.json
         run: |
-          echo '${{ env.PROPERTY_JSON }}' | jq --arg dns "${{ env.AWS_EC2_DNS }}" '.publicURL = "http://\($dns)" | .catchweekServerHost = "http://\($dns):8080"' > ./src/configs/property.json
+          echo ${{ env.PROPERTY_JSON }} > ./src/configs/property.json
           
           # 결과 확인
           cat ./src/configs/property.json
