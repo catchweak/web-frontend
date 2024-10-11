@@ -56,10 +56,11 @@ jobs:
           npm install --include=dev
       
       # property.json 파일 생성
-      - name: Create property.json
+      - name: Create property.json with dynamic AWS_EC2_DNS
         run: |
-          echo -e "${{ env.PROPERTY_JSON }}" > ./src/configs/property.json
+          echo "${{ env.PROPERTY_JSON }}" | jq --arg dns "$AWS_EC2_DNS" '.publicURL = "http://\($dns)" | .catchweekServerHost = "http://\($dns):8080"' > ./src/configs/property.json
           
+          # 결과 확인
           cat ./src/configs/property.json
 
       # React 앱 빌드
