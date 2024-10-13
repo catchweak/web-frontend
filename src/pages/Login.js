@@ -24,7 +24,7 @@ function Login(props) {
     setError("");
 
     try {
-      const response = await axiosClient.post("/login", credentials);
+      const response = await axiosClient.post("/api/login", credentials);
 
       if (response.status !== 200) {
         throw new Error("Login failed");
