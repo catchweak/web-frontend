@@ -9,6 +9,7 @@ const NewsDetail = () => {
     const { id } = useParams();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [viewCountLoading, setViewCountLoading] = useState(false);
     const [likeStatus, setLikeStatus] = useState(false);
     const [likeTimer, setTimer] = useState(null);
 
@@ -64,6 +65,9 @@ const NewsDetail = () => {
 
     // 조회수 증가 요청
     const updateViewCount = useCallback(() => {
+        if (viewCountLoading) return; // 중복 요청 방지
+        setViewCountLoading(true);
+
         const userId = Cookies.get('userId');
 
         const viewedArticles = JSON.parse(Cookies.get('viewedArticleTime') || '{}');
@@ -82,9 +86,11 @@ const NewsDetail = () => {
                     // 쿠키에 조회 기록 업데이트
                     viewedArticles[id] = currentTime;
                     Cookies.set('viewedArticleTime', JSON.stringify(viewedArticles), { expires: 1 });
+                    setViewCountLoading(false); // 요청 완료 후 다시 버튼 활성화
                 })
                 .catch(error => {
                     console.log("Error updating view count: " + error);
+                    setViewCountLoading(false); // 요청 완료 후 다시 버튼 활성화
                 });
         }
     }, [id]);
